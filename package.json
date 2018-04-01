@@ -1,0 +1,23 @@
+{
+  "name": "jslocal",
+  "version": "1.0.4",
+  "description": "javascript sandbox",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^2.14.1",
+    "prompt-sync": "^4.1.5",
+    "babel-cli": "^6.26.0",
+    "browserify": "^16.0.0",
+    "node-sass": "^4.7.2",
+    "nodemon": "^1.14.12",
+    "watchify": "^3.10.0"
+  },
+  "bin": {
+    "jslocal": "index.js"
+  }
+}
