@@ -14,8 +14,8 @@ const killJsLocal = (projectName) => {
   const syncPath = path.join(projectName);
   const files = fs.readdirSync(syncPath);
   const pids = getPIDFiles(files);
-  const bar = new ProgressBar(`Killing all processes for ${projectName} [:bar]
-    :percent`, {total: pids.length});
+  const bar = new ProgressBar(`Killing all processes for ${projectName} [:bar] :percent`,
+                              {total: pids.length});
 
   pids.map((pidFile)=>{
     const filePath = path.join(projectName, pidFile);
