@@ -1,6 +1,6 @@
 {
   "name": "jslocal",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "javascript sandbox",
   "main": "index.js",
   "scripts": {
