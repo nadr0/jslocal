@@ -24,7 +24,7 @@ if (process.argv.length < 3) {
 if (newCommand.validator(program)) {
 
   // Get project Name
-  const projectNameQuestion = 'Name of project:';
+  const projectNameQuestion = 'Name of project: ';
   let projectName = prompt(projectNameQuestion);
   while (projectName === '') {
     projectName = prompt(projectNameQuestion);

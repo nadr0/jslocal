@@ -2,6 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const {execSync, spawn, spawnSync} = require('child_process');
 const os = require('os');
+const ProgressBar = require('progress');
 
 /**
  * Given a string remove all the newline characters present
@@ -41,27 +42,29 @@ const readConfig = (projectName) => {
  */
 const loadProject = (projectName) => {
   const config = readConfig(projectName);
+  let total = 0;
+  total += config.css === 'scss' ? 1: 0;
+  total += config.javascript === 'es6' ? 1: 0;
+  total += config.package === true ? 1: 0;
+  const bar = new ProgressBar(`Booting ${projectName} [:bar] :percent`
+                              , {total: total});
   let hasProcess = false;
-
-  console.log(`Starting ${projectName} ...`);
 
   if (config.css === 'scss') {
     hasProcess = true;
-    console.log(`Booting Sass`);
     bootSass(projectName);
+    bar.tick();
   }
   if (config.javascript === 'es6') {
     hasProcess = true;
-    console.log(`Booting Babel`);
     bootBabel(projectName);
+    bar.tick();
   }
   if (config.package) {
     hasProcess = true;
-    console.log(`Booting Watchify`);
-    bootWatchify(projectName);
+    bootWatchify(projectName, config);
+    bar.tick();
   }
-
-  console.log(`Boot process completed.`);
 
   if (hasProcess === false) {
     console.log(`You do not have to start this project.`
@@ -90,14 +93,17 @@ const outputHandler = (app, appName) => {
 /**
  * Starts the watchify to compile the transpiled js file to import NPM packages
  * @param {String} projectName - name of the project to compile the
+ * @param {Object} config - project config read from the project directory
  *   transpiled JS file
  */
-const bootWatchify = (projectName) => {
+const bootWatchify = (projectName, config) => {
   const watchifyBinPath = path.join(npmBinPath, 'watchify');
-  const inputFilePath = path.join(projectName, 'compiled', 'index-compiled.js');
+  const inputFilePath = config.javascript === 'es6' ?
+        path.join(projectName, 'compiled', 'index-compiled.js') :
+        path.join(projectName, 'js', 'index.js');
+
   const outputFilePath = path.join(projectName, 'browserify',
-                                   'index-compiled-browserify.js');
-  console.log(inputFilePath, outputFilePath);
+                                   'index-browserify.js');
   const watchify = spawn(watchifyBinPath,[inputFilePath, '-o',
                          outputFilePath],
                          {detached: true});

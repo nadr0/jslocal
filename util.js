@@ -10,17 +10,14 @@ const mkDirByPathSync = (targetDir, {isRelativeToScript = false} = {}) => {
     const curDir = path.resolve(baseDir, parentDir, childDir);
     try {
       fs.mkdirSync(curDir);
-      console.log(`Directory ${curDir} created!`);
     } catch (err) {
       if (err.code !== 'EEXIST') {
         throw err;
       }
-
-      console.log(`Directory ${curDir} already exists!`);
     }
-
     return curDir;
   }, initDir);
+
 };
 
 module.exports = {

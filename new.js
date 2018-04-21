@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const util = require('./util.js');
+const ProgressBar = require('progress');
 
 /**
  * Validates argv to determine if there are enough parameters
@@ -13,20 +14,35 @@ const validator = (program) => {
  * Create a new project
  */
 const project = (program) => {
+  const lengthFromJavascript = program.javascript === 'es6' ? 2 : 0;
+  const lengthFromNpmPackage = program.npmPackage ? 1 : 0;
+  const total = 6 + lengthFromNpmPackage + lengthFromJavascript;
+  const bar = new ProgressBar('Creating project files [:bar] :percent',
+                              { total: total });
+
   createProjectFolder(program);
+  bar.tick();
   writeConfig(program);
+  bar.tick();
   writeJavascript(program);
+  bar.tick();
   writeCSS(program);
+  bar.tick();
   writeSCSS(program);
+  bar.tick();
   writeHTML(program);
+  bar.tick();
 
   if (program.javascript === 'es6') {
     writeBabel(program);
+    bar.tick();
     writeJavascriptPlaceHolders(program);
+    bar.tick();
   }
 
   if (program.npmPackage) {
     writeWatchify(program);
+    bar.tick();
   }
 };
 
@@ -102,8 +118,8 @@ const createJavascriptPath = (program) => {
   if (program.javascript === 'vanilla') {
     const javascriptPath = path.join('js','index.js');
     return `<script src='${javascriptPath}'></script>`;
-  } else if (program.javascript === 'es6' && program.npmPackage) {
-    const javascriptPath = path.join('browserify','index-compiled-browserify.js');
+  } else if (program.npmPackage) {
+    const javascriptPath = path.join('browserify','index-browserify.js');
     return `<script src='${javascriptPath}'></script>`;
   } else if (program.javascript === 'es6') {
     const javascriptPath = path.join('compiled', 'index-compiled.js');
